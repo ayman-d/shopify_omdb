@@ -1,21 +1,38 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import styled from 'styled-components';
 import lens from '../lens.jpg'
 import MovieDetails from "./MovieDetails";
 
-
-
 const Dashboard = () => {
+
+  const [results, setResults] = useState([]);
+  const [nominations, setNominations] = useState([])
+  const [input, setInput] = useState("");
+
+  const url = "http://www.omdbapi.com/?apikey=81588e03&type=movie&s=";
+
+  const handleChange = async (e) => {
+    let userInput = e.target.value;
+    setInput(userInput);
+    
+    if (userInput.length > 2) {
+      const movieSearchResult = await fetch(url+userInput);
+      const movieSearchData = await movieSearchResult.json();
+      console.log(movieSearchData); 
+    }
+  } 
+
+
   return (
     <DashboardStyles>
       <h2>The Shoppies</h2>
       <div className="search-box">
         <label htmlFor="searchText">Movie Title</label>
-        <input type="text" name="searchText" id="searchText" />
+        <input type="text" name="searchText" id="searchText" onChange={handleChange} />
       </div>
       <div className="actions-area">
         <div>
-          <p className="search-string">Results for "Rambo"</p>
+          <p className="search-string">Top 10 Results for {input}</p>
           <ul>
             <MovieDetails />
             <MovieDetails />
